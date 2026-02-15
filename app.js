@@ -211,7 +211,7 @@ function updateStatePill(datasetKey) {
   const cfg = DATASETS[datasetKey];
   const state = appState.selections[datasetKey];
   const node = document.getElementById(cfg.statePickId);
-  node.textContent = state ? `Selected state: ${state} (click text to clear)` : "Showing all states";
+  node.textContent = state ? `Selected state: ${state} (click text to clear)` : "";
 }
 
 function tableRows() {

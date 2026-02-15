@@ -160,6 +160,19 @@ th {
   background: #edf5ef;
 }
 
+.filter-row th {
+  top: 42px;
+  background: #f4f9f5;
+  padding: 0.35rem 0.45rem;
+}
+
+.table-filter {
+  width: 100%;
+  font-size: 0.78rem;
+  padding: 0.35rem 0.4rem;
+  border-radius: 6px;
+}
+
 tbody tr:nth-child(odd) {
   background: #fafdf9;
 }

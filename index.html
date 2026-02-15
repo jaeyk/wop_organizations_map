@@ -77,13 +77,35 @@
           <table>
             <thead>
               <tr>
-                <th>Dataset</th>
+                <th>Group</th>
                 <th>Name</th>
                 <th>Type</th>
                 <th>Founding Year</th>
                 <th>City</th>
                 <th>State</th>
                 <th>County</th>
+              </tr>
+              <tr class="filter-row">
+                <th>
+                  <select id="table-filter-dataset" class="table-filter">
+                    <option value="">All</option>
+                    <option value="Asian">Asian</option>
+                    <option value="Latino">Latino</option>
+                  </select>
+                </th>
+                <th><input id="table-filter-name" class="table-filter" type="text" placeholder="Filter name" /></th>
+                <th>
+                  <select id="table-filter-type" class="table-filter">
+                    <option value="">All</option>
+                    <option value="CSO">Community Service Organization</option>
+                    <option value="Advocacy">Advocacy</option>
+                    <option value="Hybrid">Hybrid</option>
+                  </select>
+                </th>
+                <th><input id="table-filter-year" class="table-filter" type="number" placeholder="Year" /></th>
+                <th><input id="table-filter-city" class="table-filter" type="text" placeholder="Filter city" /></th>
+                <th><input id="table-filter-state" class="table-filter" type="text" placeholder="State" maxlength="2" /></th>
+                <th><input id="table-filter-county" class="table-filter" type="text" placeholder="Filter county" /></th>
               </tr>
             </thead>
             <tbody id="records-body"></tbody>

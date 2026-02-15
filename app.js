@@ -44,6 +44,13 @@ const searchFilterEl = document.getElementById("search-filter");
 const yearMinEl = document.getElementById("year-min");
 const recordsBodyEl = document.getElementById("records-body");
 const tableSummaryEl = document.getElementById("table-summary");
+const tableFilterDatasetEl = document.getElementById("table-filter-dataset");
+const tableFilterNameEl = document.getElementById("table-filter-name");
+const tableFilterTypeEl = document.getElementById("table-filter-type");
+const tableFilterYearEl = document.getElementById("table-filter-year");
+const tableFilterCityEl = document.getElementById("table-filter-city");
+const tableFilterStateEl = document.getElementById("table-filter-state");
+const tableFilterCountyEl = document.getElementById("table-filter-county");
 
 async function parseCsvText(csvText) {
   return new Promise((resolve, reject) => {
@@ -224,6 +231,22 @@ function tableRows() {
     combined = combined.filter((r) => r.datasetKey !== "latino" || r.state === appState.selections.latino);
   }
 
+  const datasetQ = tableFilterDatasetEl.value.trim();
+  const nameQ = tableFilterNameEl.value.trim().toLowerCase();
+  const typeQ = tableFilterTypeEl.value.trim();
+  const yearQ = tableFilterYearEl.value.trim();
+  const cityQ = tableFilterCityEl.value.trim().toLowerCase();
+  const stateQ = tableFilterStateEl.value.trim().toUpperCase();
+  const countyQ = tableFilterCountyEl.value.trim().toLowerCase();
+
+  if (datasetQ) combined = combined.filter((r) => r.datasetLabel === datasetQ);
+  if (nameQ) combined = combined.filter((r) => r.name.toLowerCase().includes(nameQ));
+  if (typeQ) combined = combined.filter((r) => r.type === typeQ);
+  if (yearQ) combined = combined.filter((r) => String(r.foundingYear ?? "") === yearQ);
+  if (cityQ) combined = combined.filter((r) => r.city.toLowerCase().includes(cityQ));
+  if (stateQ) combined = combined.filter((r) => r.state.includes(stateQ));
+  if (countyQ) combined = combined.filter((r) => r.county.toLowerCase().includes(countyQ));
+
   combined.sort((a, b) => {
     if (a.datasetKey !== b.datasetKey) return a.datasetKey.localeCompare(b.datasetKey);
     if ((a.foundingYear ?? 99999) !== (b.foundingYear ?? 99999)) return (a.foundingYear ?? 99999) - (b.foundingYear ?? 99999);
@@ -286,6 +309,17 @@ function bindControls() {
     appState.selections.latino = null;
     renderAll();
   });
+
+  const tableOnlyRerender = () => {
+    renderTable();
+  };
+  tableFilterDatasetEl.addEventListener("change", tableOnlyRerender);
+  tableFilterTypeEl.addEventListener("change", tableOnlyRerender);
+  tableFilterNameEl.addEventListener("input", tableOnlyRerender);
+  tableFilterYearEl.addEventListener("input", tableOnlyRerender);
+  tableFilterCityEl.addEventListener("input", tableOnlyRerender);
+  tableFilterStateEl.addEventListener("input", tableOnlyRerender);
+  tableFilterCountyEl.addEventListener("input", tableOnlyRerender);
 }
 
 async function init() {

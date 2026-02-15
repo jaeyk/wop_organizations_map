@@ -91,6 +91,8 @@ Key lookup order in script:
 1. `--geocodio-key`
 2. `GEOCODIO_API_KEY` environment variable
 3. `.env.local` in project root
+4. `misc/geocodio_api_key.txt` (local fallback)
+5. `misc/geocodeo_api_key.txt` (typo-safe local fallback)
 
 Local secret file format:
 
@@ -101,6 +103,7 @@ GEOCODIO_API_KEY=your_key_here
 Security notes:
 
 - `.env.local` is git-ignored.
+- `misc/geocodio_api_key.txt` is git-ignored for local use only.
 - Do not commit API keys.
 
 ## Local Run
@@ -164,7 +167,7 @@ CI steps:
 
 1. Checkout repository
 2. Setup Python
-3. Run geocoding (`--provider auto`)
+3. If geocoded CSVs are missing, run geocoding (`--provider geocodio`)
 4. Assemble `_site/` deploy artifact
 5. Deploy to GitHub Pages
 
@@ -174,6 +177,8 @@ CI steps:
 2. Add repository secret:
    - Name: `GEOCODIO_API_KEY`
    - Path: `Settings > Secrets and variables > Actions`
+3. `GEOCODIO_API_KEY` is required only when geocoded CSVs are missing in the repo.
+4. Local `misc/geocodio_api_key.txt` is not used by GitHub Actions.
 
 ## Quick Commands
 
@@ -181,6 +186,18 @@ Geocode + serve:
 
 ```bash
 python3 scripts/geocode_organizations.py && python3 -m http.server 8000
+```
+
+Deploy helper (skips geocoding if `processed_data/*_geocoded.csv` already exist):
+
+```bash
+./deploy.sh "Your commit message"
+```
+
+Force geocoding during deploy helper:
+
+```bash
+FORCE_GEOCODE=1 ./deploy.sh "Regenerate geocoded outputs"
 ```
 
 Serve on random free port:

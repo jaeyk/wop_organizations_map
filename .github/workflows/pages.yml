@@ -30,11 +30,27 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Check geocoded files
+        id: geocode_check
+        run: |
+          if [ -s "processed_data/asian_org_geocoded.csv" ] && [ -s "processed_data/latino_org_geocoded.csv" ]; then
+            echo "need_geocode=false" >> "$GITHUB_OUTPUT"
+            echo "Found existing geocoded files in repository; skipping API geocoding."
+          else
+            echo "need_geocode=true" >> "$GITHUB_OUTPUT"
+            echo "Geocoded files missing; running geocoding step."
+          fi
+
       - name: Build geocoded data
+        if: steps.geocode_check.outputs.need_geocode == 'true'
         env:
           GEOCODIO_API_KEY: ${{ secrets.GEOCODIO_API_KEY }}
         run: |
-          python3 scripts/geocode_organizations.py --provider auto
+          if [ -z "${GEOCODIO_API_KEY:-}" ]; then
+            echo "Missing required secret: GEOCODIO_API_KEY" >&2
+            exit 1
+          fi
+          python3 scripts/geocode_organizations.py --provider geocodio
 
       - name: Assemble site artifact
         run: |

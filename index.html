@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asian American and Latino Advocacy, Community Service, and Hybrid Organizations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero reveal">
+        <p class="eyebrow">Asian American Organization Dataset</p>
+        <h1>Asian American and Latino Advocacy, Community Service, and Hybrid Organizations</h1>
+        <p class="lead">
+          Explore organization-level map points, filter by organization type, and inspect records tied to each state.
+        </p>
+        <p class="lead">
+          Developed by <a href="https://jaeyk.github.io/" target="_blank" rel="noopener noreferrer">Jae Yeon Kim</a>.
+        </p>
+      </header>
+
+      <section class="controls reveal" aria-label="Map filters">
+        <label>
+          Organization type
+          <select id="type-filter">
+            <option value="all">All types</option>
+            <option value="CSO">Community Service Organization</option>
+            <option value="Advocacy">Advocacy</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
+        </label>
+        <label>
+          Search organization
+          <input id="search-filter" type="search" placeholder="Type a name..." />
+        </label>
+        <label>
+          Founding year from
+          <input id="year-min" type="number" min="1800" max="2026" step="1" placeholder="e.g., 1980" />
+        </label>
+      </section>
+
+      <section class="grid reveal">
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Asian Organizations</h2>
+            <p id="asian-summary" class="summary"></p>
+          </div>
+          <div id="asian-map" class="map" role="region" aria-label="Asian organizations map"></div>
+          <div class="state-pick" id="asian-state-pick">Showing all states</div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Latino Organizations</h2>
+            <p id="latino-summary" class="summary"></p>
+          </div>
+          <div id="latino-map" class="map" role="region" aria-label="Latino organizations map"></div>
+          <div class="state-pick" id="latino-state-pick">Showing all states</div>
+        </article>
+      </section>
+
+      <section class="panel reveal">
+        <div class="panel-head">
+          <h2>Organization Records</h2>
+          <p class="summary" id="table-summary">Loading data...</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Dataset</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Founding Year</th>
+                <th>City</th>
+                <th>State</th>
+                <th>County</th>
+              </tr>
+            </thead>
+            <tbody id="records-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel reveal">
+        <div class="panel-head">
+          <h2>Data Notes</h2>
+        </div>
+        <div class="notes">
+          <p>
+            Data collection window: <strong>May 2017 to August 2017</strong>. Records are compiled from major organizational
+            directories and validated through websites/news sources.
+          </p>
+          <p>
+            Codebook type definitions: <strong>Community Service Organization</strong>, <strong>Advocacy</strong> (advocacy
+            organizations), <strong>Hybrid</strong> (both).
+          </p>
+          <p>
+            Current CSV totals: <strong>299 Asian organizations</strong> and <strong>519 Latino organizations</strong>.
+          </p>
+          <p>
+            Map loading priority: <strong>processed geocoded CSVs</strong> first, then raw CSV fallback if geocoded files are unavailable.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>

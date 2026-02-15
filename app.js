@@ -41,16 +41,30 @@ const appState = {
 
 const typeFilterEl = document.getElementById("type-filter");
 const searchFilterEl = document.getElementById("search-filter");
-const yearMinEl = document.getElementById("year-min");
+const yearOpEl = document.getElementById("year-op");
+const yearValueEl = document.getElementById("year-value");
 const recordsBodyEl = document.getElementById("records-body");
 const tableSummaryEl = document.getElementById("table-summary");
 const tableFilterDatasetEl = document.getElementById("table-filter-dataset");
 const tableFilterNameEl = document.getElementById("table-filter-name");
 const tableFilterTypeEl = document.getElementById("table-filter-type");
+const tableFilterYearOpEl = document.getElementById("table-filter-year-op");
 const tableFilterYearEl = document.getElementById("table-filter-year");
 const tableFilterCityEl = document.getElementById("table-filter-city");
 const tableFilterStateEl = document.getElementById("table-filter-state");
 const tableFilterCountyEl = document.getElementById("table-filter-county");
+
+function matchesYear(year, op, rawValue) {
+  const value = Number.parseInt(rawValue, 10);
+  if (Number.isNaN(value)) return true;
+  if (year === null) return false;
+
+  if (op === "eq") return year === value;
+  if (op === "gt") return year > value;
+  if (op === "lt") return year < value;
+  if (op === "lte") return year <= value;
+  return year >= value;
+}
 
 async function parseCsvText(csvText) {
   return new Promise((resolve, reject) => {
@@ -110,11 +124,12 @@ function initMap(containerId) {
 function filteredRows(rows) {
   const selectedType = typeFilterEl.value;
   const q = searchFilterEl.value.trim().toLowerCase();
-  const yearMin = Number.parseInt(yearMinEl.value, 10);
+  const yearOp = yearOpEl.value;
+  const yearValue = yearValueEl.value;
 
   return rows.filter((row) => {
     if (selectedType !== "all" && row.type !== selectedType) return false;
-    if (!Number.isNaN(yearMin) && (row.foundingYear === null || row.foundingYear < yearMin)) return false;
+    if (!matchesYear(row.foundingYear, yearOp, yearValue)) return false;
     if (q && !row.name.toLowerCase().includes(q)) return false;
     return true;
   });
@@ -234,6 +249,7 @@ function tableRows() {
   const datasetQ = tableFilterDatasetEl.value.trim();
   const nameQ = tableFilterNameEl.value.trim().toLowerCase();
   const typeQ = tableFilterTypeEl.value.trim();
+  const yearOpQ = tableFilterYearOpEl.value;
   const yearQ = tableFilterYearEl.value.trim();
   const cityQ = tableFilterCityEl.value.trim().toLowerCase();
   const stateQ = tableFilterStateEl.value.trim().toUpperCase();
@@ -242,7 +258,7 @@ function tableRows() {
   if (datasetQ) combined = combined.filter((r) => r.datasetLabel === datasetQ);
   if (nameQ) combined = combined.filter((r) => r.name.toLowerCase().includes(nameQ));
   if (typeQ) combined = combined.filter((r) => r.type === typeQ);
-  if (yearQ) combined = combined.filter((r) => String(r.foundingYear ?? "") === yearQ);
+  if (yearQ) combined = combined.filter((r) => matchesYear(r.foundingYear, yearOpQ, yearQ));
   if (cityQ) combined = combined.filter((r) => r.city.toLowerCase().includes(cityQ));
   if (stateQ) combined = combined.filter((r) => r.state.includes(stateQ));
   if (countyQ) combined = combined.filter((r) => r.county.toLowerCase().includes(countyQ));
@@ -299,7 +315,8 @@ function bindControls() {
 
   typeFilterEl.addEventListener("change", rerender);
   searchFilterEl.addEventListener("input", rerender);
-  yearMinEl.addEventListener("input", rerender);
+  yearOpEl.addEventListener("change", rerender);
+  yearValueEl.addEventListener("input", rerender);
 
   document.getElementById("asian-state-pick").addEventListener("click", () => {
     appState.selections.asian = null;
@@ -315,6 +332,7 @@ function bindControls() {
   };
   tableFilterDatasetEl.addEventListener("change", tableOnlyRerender);
   tableFilterTypeEl.addEventListener("change", tableOnlyRerender);
+  tableFilterYearOpEl.addEventListener("change", tableOnlyRerender);
   tableFilterNameEl.addEventListener("input", tableOnlyRerender);
   tableFilterYearEl.addEventListener("input", tableOnlyRerender);
   tableFilterCityEl.addEventListener("input", tableOnlyRerender);

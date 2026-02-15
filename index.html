@@ -43,8 +43,17 @@
           <input id="search-filter" type="search" placeholder="Type a name..." />
         </label>
         <label>
-          Founding year from
-          <input id="year-min" type="number" min="1800" max="2026" step="1" placeholder="e.g., 1980" />
+          Founding year
+          <div class="year-filter">
+            <select id="year-op" aria-label="Founding year operator">
+              <option value="eq">Exact year (=)</option>
+              <option value="lt">Older (before &lt;)</option>
+              <option value="gt">Younger (after &gt;)</option>
+              <option value="lte">Older or same (<=)</option>
+              <option value="gte">Younger or same (&gt;=)</option>
+            </select>
+            <input id="year-value" type="number" min="1800" max="2026" step="1" placeholder="e.g., 1980" />
+          </div>
         </label>
       </section>
 
@@ -102,7 +111,18 @@
                     <option value="Hybrid">Hybrid</option>
                   </select>
                 </th>
-                <th><input id="table-filter-year" class="table-filter" type="number" placeholder="Year" /></th>
+                <th>
+                  <div class="year-filter table-year-filter">
+                    <select id="table-filter-year-op" class="table-filter" aria-label="Table founding year operator">
+                      <option value="eq">Exact</option>
+                      <option value="lt">Older</option>
+                      <option value="gt">Younger</option>
+                      <option value="lte">Older or same</option>
+                      <option value="gte">Younger or same</option>
+                    </select>
+                    <input id="table-filter-year" class="table-filter" type="number" placeholder="Year" />
+                  </div>
+                </th>
                 <th><input id="table-filter-city" class="table-filter" type="text" placeholder="Filter city" /></th>
                 <th><input id="table-filter-state" class="table-filter" type="text" placeholder="State" maxlength="2" /></th>
                 <th><input id="table-filter-county" class="table-filter" type="text" placeholder="Filter county" /></th>

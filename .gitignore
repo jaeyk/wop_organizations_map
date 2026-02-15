@@ -2,6 +2,8 @@
 processed_data/geocode_cache.json
 .env
 .env.local
+misc/geocodio_api_key.txt
+misc/geocodeo_api_key.txt
 
 __pycache__/
 *.pyc

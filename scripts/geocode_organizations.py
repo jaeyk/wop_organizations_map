@@ -63,6 +63,13 @@ def load_dotenv_key(dotenv_path: Path, key_name: str) -> str:
     return ""
 
 
+def load_key_from_file(path: Path) -> str:
+    if not path.exists():
+        return ""
+    value = path.read_text(encoding="utf-8").strip()
+    return value
+
+
 def geocode_census(query: str, timeout: float) -> dict[str, str]:
     params = urllib.parse.urlencode(
         {
@@ -269,6 +276,8 @@ def main() -> int:
         args.geocodio_key
         or os.environ.get("GEOCODIO_API_KEY", "")
         or load_dotenv_key(Path(".env.local"), "GEOCODIO_API_KEY")
+        or load_key_from_file(Path("misc/geocodio_api_key.txt"))
+        or load_key_from_file(Path("misc/geocodeo_api_key.txt"))
     )
     provider = resolve_provider(args.provider, geocodio_key)
 

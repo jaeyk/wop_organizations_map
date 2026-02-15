@@ -10,6 +10,7 @@ import argparse
 import csv
 import json
 import os
+import sys
 import time
 import urllib.parse
 import urllib.request
@@ -167,6 +168,19 @@ def geocode(query: str, provider: str, geocodio_key: str, timeout: float) -> dic
     return geocode_census(query, timeout=timeout)
 
 
+def render_progress(prefix: str, current: int, total: int, width: int = 28) -> None:
+    if total <= 0:
+        return
+    ratio = current / total
+    filled = int(width * ratio)
+    bar = "#" * filled + "-" * (width - filled)
+    pct = ratio * 100
+    sys.stdout.write(f"\r{prefix}: [{bar}] {current}/{total} ({pct:5.1f}%)")
+    if current >= total:
+        sys.stdout.write("\n")
+    sys.stdout.flush()
+
+
 def process_dataset(
     in_path: Path,
     out_path: Path,
@@ -183,8 +197,10 @@ def process_dataset(
 
     out_rows: list[dict[str, str]] = []
     success = 0
+    total = len(rows)
+    prefix = in_path.stem
 
-    for row in rows:
+    for i, row in enumerate(rows, start=1):
         query = build_query(row)
         cache_key = f"{provider}::{query}"
 
@@ -209,6 +225,7 @@ def process_dataset(
         if combined["latitude"] and combined["longitude"]:
             success += 1
         out_rows.append(combined)
+        render_progress(prefix, i, total)
 
     fieldnames = list(rows[0].keys()) + [
         "latitude",
@@ -219,7 +236,7 @@ def process_dataset(
         "match_type",
     ]
     save_csv(out_path, out_rows, fieldnames)
-    return len(rows), success
+    return total, success
 
 
 def resolve_provider(provider_arg: str, geocodio_key: str) -> str:

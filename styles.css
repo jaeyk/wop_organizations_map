@@ -123,17 +123,6 @@ select {
   margin: 0;
 }
 
-.source-status {
-  margin: 0 0 0.5rem;
-  display: inline-block;
-  font-size: 0.78rem;
-  color: #0f5132;
-  background: #ecfdf3;
-  border: 1px solid #b8e4cd;
-  border-radius: 999px;
-  padding: 0.15rem 0.55rem;
-}
-
 .map {
   height: 430px;
   border-radius: 12px;
